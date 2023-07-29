@@ -107,7 +107,6 @@ namespace Playcipe
             {
                 this.FullScreen = webView21.CoreWebView2.ContainsFullScreenElement;
             };
-            webView21.CoreWebView2.Settings.AreDevToolsEnabled = false;
             webView21.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
             webView21.CoreWebView2.ContextMenuRequested += CoreWebView2_ContextMenuRequested;
             this.Controls.Add(webView21);
@@ -383,7 +382,7 @@ namespace Playcipe
     
                         var stringinject = `
                         <style>
-                            .ad-showing, .ad-container, .ytp-ad-overlay-open, .video-ads, .ytp-ad-overlay-image, .ytp-ad-overlay-container {
+                            .ad-showing, .ad-container, .ytp-ad-overlay-open, .video-ads, .ytp-ad-overlay-image, .ytp-ad-overlay-container, .ytd-carousel-ad-renderer, ytd-ad-slot-renderer {
                                 display: none !important;
                             }
                         </style>`;
