@@ -10,13 +10,15 @@ using System.Drawing.Printing;
 using System.Windows.Forms;
 using System.IO;
 using System.Text.RegularExpressions;
+using OpenWithSingleInstance;
+using System.Runtime.InteropServices;
+
 namespace TextEditor
 {
     public partial class Form1 : Form
     {
         private static string openFilePath = "", fileTextSaved = "";
-        private static bool justSaved = true;
-        private static bool justSavedbefore = true;
+        private static bool justSaved = true, justSavedbefore = true, onopenwith = false;
         private static DialogResult result;
         private static ContextMenu contextMenu = new ContextMenu();
         private static MenuItem menuItem;
@@ -24,11 +26,53 @@ namespace TextEditor
         private static string wordreplace;
         private static int pos = -1;
         private static string filename = "";
-        public Form1()
+        public Form1(string filePath)
         {
             InitializeComponent();
             fileText.LanguageOption = RichTextBoxLanguageOptions.AutoFont;
             fileText.Font = new Font("Arial", 11);
+            if (filePath != null)
+            {
+                onopenwith = true;
+                OpenFileWith(filePath);
+            }
+        }
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == MessageHelper.WM_COPYDATA)
+            {
+                COPYDATASTRUCT _dataStruct = Marshal.PtrToStructure<COPYDATASTRUCT>(m.LParam);
+                string _strMsg = Marshal.PtrToStringUni(_dataStruct.lpData, _dataStruct.cbData / 2);
+                OpenFileWith(_strMsg);
+            }
+            base.WndProc(ref m);
+        }
+        public void OpenFileWith(string filePath)
+        {
+            if (!justSaved)
+            {
+                result = MessageBox.Show("Content will be lost! Are you sure?", "Open", MessageBoxButtons.OKCancel);
+                if (result == DialogResult.OK)
+                {
+                    string txt = File.ReadAllText(filePath, Encoding.UTF8);
+                    fileText.Text = txt;
+                    filename = filePath;
+                    openFilePath = filePath;
+                    this.Text = filePath;
+                    fileTextSaved = fileText.Text;
+                    justSaved = true;
+                }
+            }
+            else
+            {
+                string txt = File.ReadAllText(filePath, Encoding.UTF8);
+                fileText.Text = txt;
+                filename = filePath;
+                openFilePath = filePath;
+                this.Text = filePath;
+                fileTextSaved = fileText.Text;
+                justSaved = true;
+            }
         }
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -174,7 +218,7 @@ namespace TextEditor
             }
             if (filename != "")
             {
-                using (System.IO.StreamWriter createdfile = new System.IO.StreamWriter("tempsave"))
+                using (System.IO.StreamWriter createdfile = new System.IO.StreamWriter(Application.StartupPath + @"\tempsave"))
                 {
                     createdfile.WriteLine(filename);
                 }
@@ -299,18 +343,24 @@ namespace TextEditor
         {
             try
             {
-                using (System.IO.StreamReader file = new System.IO.StreamReader("tempsave"))
+                if (!onopenwith)
                 {
-                    filename = file.ReadLine();
-                }
-                if (filename != "")
-                {
-                    string txt = File.ReadAllText(filename, Encoding.UTF8);
-                    fileText.Text = txt;
-                    openFilePath = filename;
-                    this.Text = filename;
-                    fileTextSaved = fileText.Text;
-                    justSaved = true;
+                    if (File.Exists(Application.StartupPath + @"\tempsave"))
+                    {
+                        using (System.IO.StreamReader file = new System.IO.StreamReader(Application.StartupPath + @"\tempsave"))
+                        {
+                            filename = file.ReadLine();
+                        }
+                        if (filename != "")
+                        {
+                            string txt = File.ReadAllText(filename, Encoding.UTF8);
+                            fileText.Text = txt;
+                            openFilePath = filename;
+                            this.Text = filename;
+                            fileTextSaved = fileText.Text;
+                            justSaved = true;
+                        }
+                    }
                 }
             }
             catch { }

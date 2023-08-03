@@ -3,6 +3,8 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Security.Principal;
 using System.Runtime.InteropServices;
+using OpenWithSingleInstance;
+
 namespace TextEditor
 {
     public static class Program
@@ -18,7 +20,7 @@ namespace TextEditor
         /// Point d'entrée principal de l'application.
         /// </summary>
         [STAThread]
-        public static void Main()
+        public static void Main(params string[] args)
         {
             bool runelevated = false;
             bool oneinstanceonly = false;
@@ -49,7 +51,13 @@ namespace TextEditor
             }
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            if (SingleInstanceHelper.CheckInstancesUsingMutex() && args.Length > 0)
+            {
+                Process _otherInstance = SingleInstanceHelper.GetAlreadyRunningInstance();
+                MessageHelper.SendDataMessage(_otherInstance, args[0]);
+                return;//Exit this instance and let the existing one open the file
+            }
+            Application.Run(new Form1(args.Length > 0 ? args[0] : null));
         }
         public static bool hasAdminRights()
         {

@@ -12,21 +12,63 @@ using System.Text.RegularExpressions;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using FastColoredTextBoxNS;
+using OpenWithSingleInstance;
+using System.Runtime.InteropServices;
 
 namespace CodeEditor
 {
     public partial class Form1 : Form
     {
         private static string openFilePath = "", fastColoredTextBoxSaved = "";
-        private static bool justSaved = true;
+        private static bool justSaved = true, onopenwith = false;
         private static DialogResult result;
         private static ContextMenu contextMenu = new ContextMenu();
         private static MenuItem menuItem;
         private static string filename = "";
         private static int lang;
-        public Form1()
+        public Form1(string filePath)
         {
             InitializeComponent();
+            if (filePath != null)
+            {
+                onopenwith = true;
+                OpenFileWith(filePath);
+            }
+        }
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == MessageHelper.WM_COPYDATA)
+            {
+                COPYDATASTRUCT _dataStruct = Marshal.PtrToStructure<COPYDATASTRUCT>(m.LParam);
+                string _strMsg = Marshal.PtrToStringUni(_dataStruct.lpData, _dataStruct.cbData / 2);
+                OpenFileWith(_strMsg);
+            }
+            base.WndProc(ref m);
+        }
+        public void OpenFileWith(string filePath)
+        {
+            if (!justSaved)
+            {
+                result = MessageBox.Show("Content will be lost! Are you sure?", "Open", MessageBoxButtons.OKCancel);
+                if (result == DialogResult.OK)
+                {
+                    fastColoredTextBox1.OpenFile(filePath, Encoding.UTF8);
+                    filename = filePath;
+                    openFilePath = filePath;
+                    this.Text = filePath;
+                    fastColoredTextBoxSaved = fastColoredTextBox1.Text;
+                    justSaved = true;
+                }
+            }
+            else
+            {
+                fastColoredTextBox1.OpenFile(filePath, Encoding.UTF8);
+                filename = filePath;
+                openFilePath = filePath;
+                this.Text = filePath;
+                fastColoredTextBoxSaved = fastColoredTextBox1.Text;
+                justSaved = true;
+            }
         }
         private void cToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -226,7 +268,7 @@ namespace CodeEditor
             }
             if (filename != "")
             {
-                using (System.IO.StreamWriter createdfile = new System.IO.StreamWriter("tempsave"))
+                using (System.IO.StreamWriter createdfile = new System.IO.StreamWriter(Application.StartupPath + @"\tempsave"))
                 {
                     createdfile.WriteLine(filename); 
                     createdfile.WriteLine(Convert.ToInt32(fastColoredTextBox1.Language).ToString());
@@ -256,24 +298,27 @@ namespace CodeEditor
         }
         private void Form1_Shown(object sender, EventArgs e)
         {
-            if (System.IO.File.Exists("tempsave"))
+            if (!onopenwith)
             {
-                using (System.IO.StreamReader file = new System.IO.StreamReader("tempsave"))
+                if (System.IO.File.Exists(Application.StartupPath + @"\tempsave"))
                 {
-                    filename = file.ReadLine();
-                    lang = Convert.ToInt32(file.ReadLine());
-                }
-                if (filename != "")
-                {
-                    fastColoredTextBox1.ClearStylesBuffer();
-                    fastColoredTextBox1.Range.ClearStyle(StyleIndex.All);
-                    fastColoredTextBox1.Language = (Language)lang;
-                    fastColoredTextBox1.OnSyntaxHighlight(new TextChangedEventArgs(fastColoredTextBox1.Range));
-                    fastColoredTextBox1.OpenFile(filename, Encoding.UTF8);
-                    openFilePath = filename;
-                    this.Text = filename;
-                    fastColoredTextBoxSaved = fastColoredTextBox1.Text;
-                    justSaved = true;
+                    using (System.IO.StreamReader file = new System.IO.StreamReader(Application.StartupPath + @"\tempsave"))
+                    {
+                        filename = file.ReadLine();
+                        lang = Convert.ToInt32(file.ReadLine());
+                    }
+                    if (filename != "")
+                    {
+                        fastColoredTextBox1.ClearStylesBuffer();
+                        fastColoredTextBox1.Range.ClearStyle(StyleIndex.All);
+                        fastColoredTextBox1.Language = (Language)lang;
+                        fastColoredTextBox1.OnSyntaxHighlight(new TextChangedEventArgs(fastColoredTextBox1.Range));
+                        fastColoredTextBox1.OpenFile(filename, Encoding.UTF8);
+                        openFilePath = filename;
+                        this.Text = filename;
+                        fastColoredTextBoxSaved = fastColoredTextBox1.Text;
+                        justSaved = true;
+                    }
                 }
             }
         }
