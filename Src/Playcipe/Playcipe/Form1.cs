@@ -365,7 +365,7 @@ namespace Playcipe
                                 var unmute = document.getElementsByClassName('playing-mode');
                                 for (let i = 0; i < unmute.length; i++)
                                 {
-                                    await bridge.EnableSound();
+                                    await bridge.EnableSound('');
                                 }
                                 var players = document.getElementById('movie_player');
                                 for (let i = 0; i < players.length; i++)
@@ -377,7 +377,7 @@ namespace Playcipe
                                     players.classList.add('ytp-hide-info-bar');
                                     players.classList.add('playing-mode');
                                     players.classList.add('ytp-autohide');
-                                    await bridge.CutSound();
+                                    await bridge.CutSound('');
                                 }
                             }
                             catch { }
