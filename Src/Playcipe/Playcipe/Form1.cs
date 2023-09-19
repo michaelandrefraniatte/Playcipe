@@ -258,12 +258,13 @@ namespace Playcipe
             try
             {
                 string stringinject = @"
-                    const bridge = chrome.webview.hostObjects.bridge;
                     if (window.location.href.indexOf('youtube') > -1 | window.location.href.indexOf('youtu.be') > -1) {
                         
                         var playButtonFinderInterval = '';
                         var skipMovieFinderInterval = '';
                         var closeBannerFinderInterval = '';
+                        
+                        const bridge = chrome.webview.hostObjects.bridge;
 
                         (function () {
                             getScript('https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js', function () {
@@ -308,7 +309,7 @@ namespace Playcipe
                             }
                         })();
 
-                        async function removeAds() {
+                        function removeAds() {
                             try {
                                 var els = document.getElementsByClassName('video-ads ytp-ad-module');
                                 for (var i=0;i<els.length; i++) {
@@ -362,14 +363,8 @@ namespace Playcipe
                                             allelements[i].innerHTML = '';
                                     }
                                 }
-                                var unmute = document.getElementsByClassName('playing-mode');
-                                for (let i = 0; i < unmute.length; i++)
-                                {
-                                    await bridge.EnableSound('');
-                                }
                                 var players = document.getElementById('movie_player');
-                                for (let i = 0; i < players.length; i++)
-                                {
+                                for (let i = 0; i < players.length; i++) {
                                     players.classList.remove('ad-showing');
                                     players.classList.remove('ad-interrupting');
                                     players.classList.remove('playing-mode');
@@ -377,7 +372,14 @@ namespace Playcipe
                                     players.classList.add('ytp-hide-info-bar');
                                     players.classList.add('playing-mode');
                                     players.classList.add('ytp-autohide');
-                                    await bridge.CutSound('');
+                                }
+                                var unmute = document.getElementsByClassName('playing-mode');
+                                for (let i = 0; i < unmute.length; i++) {
+                                    bridge.EnableSound('');
+                                }
+                                var mute = document.getElementsByClassName('playing-mode');
+                                for (let i = 0; i < mute.length; i++) {
+                                    bridge.CutSound('');
                                 }
                             }
                             catch { }
