@@ -19,6 +19,12 @@ namespace Playcipe
         {
             InitializeComponent();
         }
+        private const int APPCOMMAND_VOLUME_MUTE = 0x80000;
+        private const int APPCOMMAND_VOLUME_UP = 0xA0000;
+        private const int APPCOMMAND_VOLUME_DOWN = 0x90000;
+        private const int WM_APPCOMMAND = 0x319;
+        [DllImport("user32.dll")]
+        public static extern IntPtr SendMessageW(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
         [DllImport("USER32.DLL")]
         public static extern int SetWindowLong(IntPtr hWnd, int nIndex, uint dwNewLong);
         [DllImport("user32.dll", EntryPoint = "FindWindow", SetLastError = true)]
@@ -57,6 +63,7 @@ namespace Playcipe
         public KeyboardHook keyboardHook = new KeyboardHook();
         public static int vkCode, scanCode;
         public static bool KeyboardHookButtonDown, KeyboardHookButtonUp;
+        private static IntPtr hwnd;
         public static int[] wd = { 2, 2, 2, 2 };
         public static int[] wu = { 2, 2, 2, 2 };
         public static void valchanged(int n, bool val)
@@ -107,6 +114,7 @@ namespace Playcipe
             {
                 this.FullScreen = webView21.CoreWebView2.ContainsFullScreenElement;
             };
+            webView21.CoreWebView2.AddHostObjectToScript("bridge", new Bridge());
             webView21.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
             webView21.CoreWebView2.ContextMenuRequested += CoreWebView2_ContextMenuRequested;
             this.Controls.Add(webView21);
@@ -117,6 +125,7 @@ namespace Playcipe
             }
             if (echoboostenable)
                 Process.Start("EchoBoost.exe");
+            hwnd = this.Handle;
         }
         private void CoreWebView2_WebResourceRequested(object sender, CoreWebView2WebResourceRequestedEventArgs e)
         {
@@ -249,6 +258,7 @@ namespace Playcipe
             try
             {
                 string stringinject = @"
+                    const bridge = chrome.webview.hostObjects.bridge;
                     if (window.location.href.indexOf('youtube') > -1 | window.location.href.indexOf('youtu.be') > -1) {
                         
                         var playButtonFinderInterval = '';
@@ -298,7 +308,7 @@ namespace Playcipe
                             }
                         })();
 
-                        function removeAds() {
+                        async function removeAds() {
                             try {
                                 var els = document.getElementsByClassName('video-ads ytp-ad-module');
                                 for (var i=0;i<els.length; i++) {
@@ -352,6 +362,11 @@ namespace Playcipe
                                             allelements[i].innerHTML = '';
                                     }
                                 }
+                                var unmute = document.getElementsByClassName('playing-mode');
+                                for (let i = 0; i < unmute.length; i++)
+                                {
+                                    await bridge.EnableSound();
+                                }
                                 var players = document.getElementById('movie_player');
                                 for (let i = 0; i < players.length; i++)
                                 {
@@ -362,6 +377,7 @@ namespace Playcipe
                                     players.classList.add('ytp-hide-info-bar');
                                     players.classList.add('playing-mode');
                                     players.classList.add('ytp-autohide');
+                                    await bridge.CutSound();
                                 }
                             }
                             catch { }
@@ -474,6 +490,18 @@ namespace Playcipe
                 if (proc.Length > 0 & Process.GetProcessesByName("Playtov").Length == 0 & Process.GetProcessesByName("Playzer").Length == 0 & Process.GetProcessesByName("Playtube").Length == 0)
                     proc[0].Kill();
             }
+        }
+        public static void Mute()
+        {
+            SendMessageW(hwnd, WM_APPCOMMAND, hwnd, (IntPtr)APPCOMMAND_VOLUME_MUTE);
+        }
+        public static void VolDown()
+        {
+            SendMessageW(hwnd, WM_APPCOMMAND, hwnd, (IntPtr)APPCOMMAND_VOLUME_DOWN);
+        }
+        public static void VolUp()
+        {
+            SendMessageW(hwnd, WM_APPCOMMAND, hwnd, (IntPtr)APPCOMMAND_VOLUME_UP);
         }
         private async void KeyboardHook_Hook(KeyboardHook.KBDLLHOOKSTRUCT keyboardStruct) { }
         public const int VK_LBUTTON = (int)0x01;
@@ -1802,5 +1830,20 @@ namespace Playcipe
         public static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern IntPtr GetModuleHandle(string lpModuleName);
+    }
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ComVisible(true)]
+    public class Bridge
+    {
+        public string CutSound(string param)
+        {
+            Form1.Mute();
+            return param;
+        }
+        public string EnableSound(string param)
+        {
+            Form1.VolUp();
+            return param;
+        }
     }
 }
