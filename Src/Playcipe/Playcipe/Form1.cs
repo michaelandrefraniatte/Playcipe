@@ -110,6 +110,7 @@ namespace Playcipe
             string filepath = @"file:///" + System.Reflection.Assembly.GetEntryAssembly().Location.Replace("\\", "/").Replace("Playcipe.exe", "") + "assets/index.html";
             webView21.Source = new System.Uri(filepath);
             webView21.Dock = DockStyle.Fill;
+            webView21.DefaultBackgroundColor = Color.Transparent;
             webView21.CoreWebView2.ContainsFullScreenElementChanged += (obj, args) =>
             {
                 this.FullScreen = webView21.CoreWebView2.ContainsFullScreenElement;
