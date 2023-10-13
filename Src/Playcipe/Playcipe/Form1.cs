@@ -64,6 +64,7 @@ namespace Playcipe
         public static int vkCode, scanCode;
         public static bool KeyboardHookButtonDown, KeyboardHookButtonUp;
         private static IntPtr hwnd;
+        public static bool starting = true;
         public static int[] wd = { 2, 2, 2, 2 };
         public static int[] wu = { 2, 2, 2, 2 };
         public static void valchanged(int n, bool val)
@@ -100,6 +101,8 @@ namespace Playcipe
             cy = Screen.PrimaryScreen.Bounds.Height - 100;
             this.Size = new Size(cx, cy);
             this.Location = new Point(x, y);
+            this.label1.Location = new Point(cx / 2 - this.label1.Size.Width / 2, cy / 2 - this.label1.Height / 2 - this.label2.Height);
+            this.label2.Location = new Point(cx / 2 - this.label2.Size.Width / 2, cy / 2 - this.label2.Height / 2 + this.label2.Height);
             CoreWebView2EnvironmentOptions options = new CoreWebView2EnvironmentOptions("--disable-web-security", "--autoplay-policy=no-user-gesture-required");
             CoreWebView2Environment environment = await CoreWebView2Environment.CreateAsync(null, null, options);
             await webView21.EnsureCoreWebView2Async(environment);
@@ -110,7 +113,8 @@ namespace Playcipe
             string filepath = @"file:///" + System.Reflection.Assembly.GetEntryAssembly().Location.Replace("\\", "/").Replace("Playcipe.exe", "") + "assets/index.html";
             webView21.Source = new System.Uri(filepath);
             webView21.Dock = DockStyle.Fill;
-            webView21.DefaultBackgroundColor = Color.Transparent;
+            webView21.NavigationCompleted += WebView21_NavigationCompleted;
+            webView21.DefaultBackgroundColor = Color.Black;
             webView21.CoreWebView2.ContainsFullScreenElementChanged += (obj, args) =>
             {
                 this.FullScreen = webView21.CoreWebView2.ContainsFullScreenElement;
@@ -127,6 +131,16 @@ namespace Playcipe
             if (echoboostenable)
                 Process.Start("EchoBoost.exe");
             hwnd = this.Handle;
+        }
+        private void WebView21_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
+        {
+            if (starting)
+            {
+                this.Controls.Remove(label1);
+                this.Controls.Remove(label2);
+                this.Controls.Remove(label3);
+                starting = false;
+            }
         }
         private void CoreWebView2_WebResourceRequested(object sender, CoreWebView2WebResourceRequestedEventArgs e)
         {
