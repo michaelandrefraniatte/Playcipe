@@ -261,34 +261,24 @@ namespace Playcipe
                 string stringinject = @"
                     if (window.location.href.indexOf('youtube') > -1 | window.location.href.indexOf('youtu.be') > -1) {
                         
-                        var playButtonFinderInterval = '';
-                        var skipMovieFinderInterval = '';
-                        var closeBannerFinderInterval = '';
-                        
                         const bridge = chrome.webview.hostObjects.bridge;
 
                         (function () {
                             getScript('https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js', function () {
                                 $(document).ready(function () {
                                     removeAds();
-                                    playButtonFinderInterval = setInterval(() => {
-                                        var playButton = getPlayButton();
-                                        if (playButton) {
-                                            playButton.click();
-                                        }
-                                    }, 100);
-                                    skipMovieFinderInterval = setInterval(() => {
-                                        var skipButton = getSkipButton();
-                                        if (skipButton) {
-                                            skipButton.click();
-                                        }
-                                    }, 100);
-                                    closeBannerFinderInterval = setInterval(() => {
-                                        var closeButton = getCloseButton();
-                                        if (closeButton) {
-                                            closeButton.click();
-                                        }
-                                    }, 100);
+                                    var playButton = getPlayButton();
+                                    if (playButton) {
+                                        playButton.click();
+                                    }
+                                    var skipButton = getSkipButton();
+                                    if (skipButton) {
+                                        skipButton.click();
+                                    }
+                                    var closeButton = getCloseButton();
+                                    if (closeButton) {
+                                        closeButton.click();
+                                    }
                                 });
                             });
                             function getScript(url, success) {
@@ -384,7 +374,6 @@ namespace Playcipe
                                 }
                             }
                             catch { }
-                            setTimeout(removeAds, 3000);
                         }
 
                         function getPlayButton() {
