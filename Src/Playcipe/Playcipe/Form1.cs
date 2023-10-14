@@ -58,6 +58,7 @@ namespace Playcipe
         private static int width, height;
         private static bool f11switch = false;
         public WebView2 webView21 = new WebView2();
+        private static string filepath;
         public static bool echoboostenable = false;
         private static int x, y, cx, cy;
         public KeyboardHook keyboardHook = new KeyboardHook();
@@ -86,10 +87,7 @@ namespace Playcipe
                 wd[n] = 0;
             }
         }
-        private void Form1_Load(object sender, EventArgs e)
-        {
-        }
-        private async void Form1_Shown(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
         {
             TimeBeginPeriod(1);
             NtSetTimerResolution(1, true, ref CurrentResolution);
@@ -103,6 +101,8 @@ namespace Playcipe
             this.Location = new Point(x, y);
             this.label1.Location = new Point(cx / 2 - this.label1.Size.Width / 2, cy / 2 - this.label1.Height / 2 - this.label2.Height);
             this.label2.Location = new Point(cx / 2 - this.label2.Size.Width / 2, cy / 2 - this.label2.Height / 2 + this.label2.Height);
+            this.progressBar1.Location = new Point(cx / 2 - this.progressBar1.Size.Width / 2, cy * 2 / 3);
+            Task.Run(() => Loader());
             CoreWebView2EnvironmentOptions options = new CoreWebView2EnvironmentOptions("--disable-web-security", "--autoplay-policy=no-user-gesture-required");
             CoreWebView2Environment environment = await CoreWebView2Environment.CreateAsync(null, null, options);
             await webView21.EnsureCoreWebView2Async(environment);
@@ -110,8 +110,8 @@ namespace Playcipe
             webView21.CoreWebView2.WebResourceRequested += CoreWebView2_WebResourceRequested;
             webView21.CoreWebView2.Settings.AreDevToolsEnabled = true;
             webView21.CoreWebView2.SetVirtualHostNameToFolderMapping("appassets", "assets", CoreWebView2HostResourceAccessKind.DenyCors);
-            string filepath = @"file:///" + System.Reflection.Assembly.GetEntryAssembly().Location.Replace("\\", "/").Replace("Playcipe.exe", "") + "assets/index.html";
-            webView21.Source = new System.Uri(filepath);
+            filepath = @"file:///" + System.Reflection.Assembly.GetEntryAssembly().Location.Replace("\\", "/").Replace("Playcipe.exe", "") + "assets/index.html";
+            webView21.Source = new System.Uri("https://www.youtube.com/");
             webView21.Dock = DockStyle.Fill;
             webView21.NavigationCompleted += WebView21_NavigationCompleted;
             webView21.DefaultBackgroundColor = Color.Black;
@@ -132,10 +132,19 @@ namespace Playcipe
                 Process.Start("EchoBoost.exe");
             hwnd = this.Handle;
         }
+        private void Loader()
+        {
+            while (this.progressBar1.Value <= 100)
+            {
+                this.progressBar1.Value++;
+                System.Threading.Thread.Sleep(110);
+            }
+        }
         private void WebView21_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
             if (starting)
             {
+                this.Controls.Remove(progressBar1);
                 this.Controls.Remove(label1);
                 this.Controls.Remove(label2);
                 this.Controls.Remove(label3);
@@ -174,7 +183,6 @@ namespace Playcipe
             newItem = webView21.CoreWebView2.Environment.CreateContextMenuItem("Go to menu", null, CoreWebView2ContextMenuItemKind.Command);
             newItem.CustomItemSelected += delegate (object send, Object ex)
             {
-                string filepath = @"file:///" + System.Reflection.Assembly.GetEntryAssembly().Location.Replace("\\", "/").Replace("Playcipe.exe", "") + "assets/index.html";
                 System.Threading.SynchronizationContext.Current.Post((_) =>
                 {
                     webView21.Source = new System.Uri(filepath);
