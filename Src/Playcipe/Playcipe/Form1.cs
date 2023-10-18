@@ -350,7 +350,7 @@ namespace Playcipe
                                     bridge.Sound('false');
                                 }
                                 else {
-                                    setTimeout(() => { bridge.Sound('true'); }, 15000);
+                                    bridge.Sound('true');
                                 }
                             }
                             catch { }
@@ -1905,6 +1905,7 @@ namespace Playcipe
     [ComVisible(true)]
     public class Bridge
     {
+        public static bool offset = false;
         public static int[] wd = { 2, 2, 2, 2 };
         public static int[] wu = { 2, 2, 2, 2 };
         public static void valchanged(int n, bool val)
@@ -1928,14 +1929,13 @@ namespace Playcipe
         }
         public string Sound(string param)
         {
-            valchanged(0, param == "false");
+            valchanged(0, param == "false" & !offset);
             if (wu[0] == 1)
             {
+                offset = true;
                 Form1.Mute();
-            }
-            valchanged(1, param == "true");
-            if (wu[1] == 1)
-            {
+                System.Threading.Thread.Sleep(15000);
+                offset = false;
                 Form1.VolUp();
             }
             return param;
