@@ -350,7 +350,7 @@ namespace Playcipe
                                     bridge.Sound('false');
                                 }
                                 else {
-                                    bridge.Sound('true');
+                                    setTimeout(() => { bridge.Sound('true'); }, 3000);
                                 }
                             }
                             catch { }
@@ -1934,7 +1934,7 @@ namespace Playcipe
             {
                 offset = true;
                 Form1.Mute();
-                System.Threading.Thread.Sleep(15000);
+                System.Threading.Thread.Sleep(20000);
                 offset = false;
                 Form1.VolUp();
             }
