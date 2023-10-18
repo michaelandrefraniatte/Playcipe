@@ -181,6 +181,15 @@ namespace Playcipe
         {
             IList<CoreWebView2ContextMenuItem> menuList = e.MenuItems;
             CoreWebView2ContextMenuItem newItem;
+            newItem = webView21.CoreWebView2.Environment.CreateContextMenuItem("Empty cookies", null, CoreWebView2ContextMenuItemKind.Command);
+            newItem.CustomItemSelected += delegate (object send, Object ex)
+            {
+                System.Threading.SynchronizationContext.Current.Post((_) =>
+                {
+                    webView21.CoreWebView2.CookieManager.DeleteAllCookies();
+                }, null);
+            };
+            menuList.Insert(menuList.Count, newItem);
             newItem = webView21.CoreWebView2.Environment.CreateContextMenuItem("Copy page Uri", null, CoreWebView2ContextMenuItemKind.Command);
             newItem.CustomItemSelected += delegate (object send, Object ex)
             {
@@ -340,6 +349,9 @@ namespace Playcipe
                                 for (var i=0;i<els.length; i++) {
                                     els[i].click();
                                 }
+                            }
+                            catch { }
+                            try {
                                 document.cookie = 'VISITOR_INFO1_LIVE = oKckVSqvaGw; path =/; domain =.youtube.com';
                                 var cookies = document.cookie.split('; ');
                                 for (var i = 0; i < cookies.length; i++)
@@ -349,14 +361,23 @@ namespace Playcipe
                                     var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
                                     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
                                 }
+                            }
+                            catch { }
+                            try {
                                 var el = document.getElementsByClassName('ytp-ad-skip-button');
                                 for (var i=0;i<el.length; i++) {
                                     el[i].click();
                                 }
+                            }
+                            catch { }
+                            try {
                                 var element = document.getElementsByClassName('ytp-ad-overlay-close-button');
                                 for (var i=0;i<element.length; i++) {
                                     element[i].click();
                                 }
+                            }
+                            catch { }
+                            try {
                                 var scripts = document.getElementsByTagName('script');
                                 for (let i = 0; i < scripts.length; i++)
                                 {
@@ -369,6 +390,9 @@ namespace Playcipe
                                         scripts[i].setAttribute('src', '');
                                     }
                                 }
+                            }
+                            catch { }
+                            try {
                                 var iframes = document.getElementsByTagName('iframe');
                                 for (let i = 0; i < iframes.length; i++)
                                 {
@@ -381,6 +405,9 @@ namespace Playcipe
                                         iframes[i].setAttribute('src', '');
                                     }
                                 }
+                            }
+                            catch { }
+                            try {
                                 var allelements = document.querySelectorAll('*');
                                 for (var i = 0; i < allelements.length; i++) {
                                     var classname = allelements[i].className;
@@ -388,6 +415,9 @@ namespace Playcipe
                                             allelements[i].innerHTML = '';
                                     }
                                 }
+                            }
+                            catch { }
+                            try {
                                 var players = document.getElementById('movie_player');
                                 for (let i = 0; i < players.length; i++) {
                                     players.classList.remove('ad-showing');
@@ -398,14 +428,30 @@ namespace Playcipe
                                     players.classList.add('playing-mode');
                                     players.classList.add('ytp-autohide');
                                 }
-                                var unmute = document.getElementsByClassName('playing-mode');
-                                for (let i = 0; i < unmute.length; i++) {
-                                    bridge.EnableSound('');
-                                }
-                                var mute = document.getElementsByClassName('playing-mode');
+                            }
+                            catch { }
+                            try {
+                                var mute = document.getElementsByClassName('ad-showing') | document.getElementsByClassName('ad-container') | document.getElementsByClassName('video-ads');
                                 for (let i = 0; i < mute.length; i++) {
-                                    bridge.CutSound('');
+                                    bridge.CutSound('true');
+                                    bridge.EnableSound('false');
                                 }
+                                if (mute.length == 0) {
+                                    bridge.CutSound('false');
+                                    bridge.EnableSound('true');
+                                }
+                            }
+                            catch { }
+                            try {
+                                var fabelements = document.querySelectorAll('yt-reaction-control-panel-button-view-model');
+                                for (var i = 0; i < fabelements.length; i++) {
+                                     fabelements[i].innerHTML = '';
+                                }
+                            }
+                            catch { }
+                            try {
+                                var fabelement = document.querySelector('#fab-container');
+                                fabelement.innerHTML = '';
                             }
                             catch { }
                         }
@@ -424,7 +470,7 @@ namespace Playcipe
     
                         var stringinject = `
                         <style>
-                            .ad-showing, .ad-container, .ytp-ad-overlay-open, .video-ads, .ytp-ad-overlay-image, .ytp-ad-overlay-container, .ytd-carousel-ad-renderer, ytd-ad-slot-renderer, ytd-action-companion-ad-renderer, ytd-engagement-panel-section-list-renderer, ytd-player-legacy-desktop-watch-ads-renderer {
+                            .ad-showing, .ad-container, .ytp-ad-overlay-open, .video-ads, .ytp-ad-overlay-image, .ytp-ad-overlay-container, .ytd-carousel-ad-renderer, ytd-ad-slot-renderer, ytd-action-companion-ad-renderer, ytd-engagement-panel-section-list-renderer, ytd-player-legacy-desktop-watch-ads-renderer, #reaction-control-panel, #emoji-fountain, #fab-container, yt-reaction-control-panel-button-view-model {
                                 display: none !important;
                             }
                         </style>`;
@@ -1861,14 +1907,43 @@ namespace Playcipe
     [ComVisible(true)]
     public class Bridge
     {
-        public string CutSound(string param)
+        public static int[] wd = { 2, 2, 2, 2 };
+        public static int[] wu = { 2, 2, 2, 2 };
+        public static void valchanged(int n, bool val)
         {
-            Form1.Mute();
-            return param;
+            if (val)
+            {
+                if (wd[n] <= 1)
+                {
+                    wd[n] = wd[n] + 1;
+                }
+                wu[n] = 0;
+            }
+            else
+            {
+                if (wu[n] <= 1)
+                {
+                    wu[n] = wu[n] + 1;
+                }
+                wd[n] = 0;
+            }
         }
         public string EnableSound(string param)
         {
-            Form1.VolUp();
+            valchanged(1, param == "true");
+            if (wu[1] == 1)
+            {
+                Form1.VolUp();
+            }
+            return param;
+        }
+        public string CutSound(string param)
+        {
+            valchanged(0, param == "true");
+            if (wu[0] == 1)
+            {
+                Form1.Mute();
+            }
             return param;
         }
     }
