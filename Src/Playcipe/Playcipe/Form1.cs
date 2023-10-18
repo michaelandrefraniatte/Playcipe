@@ -345,9 +345,12 @@ namespace Playcipe
 
                         function removeAds() {
                             try {
-                                var els = document.getElementsByClassName('video-ads ytp-ad-module');
-                                for (var i=0;i<els.length; i++) {
-                                    els[i].click();
+                                var mute = document.querySelectorAll('.ad-showing, .ad-container, .ytp-ad-overlay-open, .video-ads');
+                                if (mute.length > 0) {
+                                    bridge.Sound('false');
+                                }
+                                else {
+                                    setTimeout(() => { bridge.Sound('true'); }, 15000);
                                 }
                             }
                             catch { }
@@ -360,6 +363,13 @@ namespace Playcipe
                                     var eqPos = cookie.indexOf('=');
                                     var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
                                     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+                                }
+                            }
+                            catch { }
+                            try {
+                                var els = document.getElementsByClassName('video-ads ytp-ad-module');
+                                for (var i=0;i<els.length; i++) {
+                                    els[i].click();
                                 }
                             }
                             catch { }
@@ -427,16 +437,6 @@ namespace Playcipe
                                     players.classList.add('ytp-hide-info-bar');
                                     players.classList.add('playing-mode');
                                     players.classList.add('ytp-autohide');
-                                }
-                            }
-                            catch { }
-                            try {
-                                var mute = document.querySelectorAll('.ad-showing, .ad-container, .ytp-ad-overlay-open, .video-ads, .ytp-ad-module');
-                                for (let i = 0; i < mute.length; i++) {
-                                    bridge.Sound('false');
-                                }
-                                if (mute.length == 0) {
-                                    bridge.Sound('true');
                                 }
                             }
                             catch { }
