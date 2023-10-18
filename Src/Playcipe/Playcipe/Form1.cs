@@ -431,14 +431,12 @@ namespace Playcipe
                             }
                             catch { }
                             try {
-                                var mute = document.getElementsByClassName('ad-showing') | document.getElementsByClassName('ad-container') | document.getElementsByClassName('video-ads');
+                                var mute = document.querySelectorAll('.ad-showing, .ad-container, .ytp-ad-overlay-open, .video-ads, .ytp-ad-module');
                                 for (let i = 0; i < mute.length; i++) {
-                                    bridge.CutSound('true');
-                                    bridge.EnableSound('false');
+                                    bridge.Sound('false');
                                 }
                                 if (mute.length == 0) {
-                                    bridge.CutSound('false');
-                                    bridge.EnableSound('true');
+                                    bridge.Sound('true');
                                 }
                             }
                             catch { }
@@ -1928,21 +1926,17 @@ namespace Playcipe
                 wd[n] = 0;
             }
         }
-        public string EnableSound(string param)
+        public string Sound(string param)
         {
+            valchanged(0, param == "false");
+            if (wu[0] == 1)
+            {
+                Form1.Mute();
+            }
             valchanged(1, param == "true");
             if (wu[1] == 1)
             {
                 Form1.VolUp();
-            }
-            return param;
-        }
-        public string CutSound(string param)
-        {
-            valchanged(0, param == "true");
-            if (wu[0] == 1)
-            {
-                Form1.Mute();
             }
             return param;
         }
