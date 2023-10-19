@@ -411,12 +411,9 @@ namespace Playcipe
                                 var allelements = document.querySelectorAll('*');
                                 for (var i = 0; i < allelements.length; i++) {
                                     var classname = allelements[i].className;
-                                    if (classname.indexOf('ytp-ad') > -1 | classname.indexOf('-ad-') > -1)  {
+                                    if (classname.indexOf('ytp-ad') > -1 | classname.indexOf('-ad-') > -1 | classname.indexOf('ad-') > -1 | classname.indexOf('ads-') > -1 | classname.indexOf('ad-showing') > -1 | classname.indexOf('ad-container') > -1 | classname.indexOf('ytp-ad-overlay-open') > -1 | classname.indexOf('video-ads') > -1)  {
+                                        cutSound();
                                         allelements[i].innerHTML = '';
-                                    }
-                                    if (classname.indexOf('ytp-ad') > -1 | classname.indexOf('-ad-') > -1 | classname.indexOf('ad-showing') > -1 | classname.indexOf('ad-container') > -1 | classname.indexOf('ytp-ad-overlay-open') > -1 | classname.indexOf('video-ads') > -1)  {
-                                        bridge.Sound('false');
-                                        setTimeout(() => { bridge.Sound('true'); }, 2000);
                                     }
                                 }
                             }
@@ -459,7 +456,11 @@ namespace Playcipe
                         function getCloseButton() {
                             return $('.ytp-ad-overlay-close-button');
                         }
-    
+                        
+                        function cutSound() {
+                            bridge.Sound('');
+                        }
+                        
                         var stringinject = `
                         <style>
                             .ad-showing, .ad-container, .ytp-ad-overlay-open, .video-ads, .ytp-ad-overlay-image, .ytp-ad-overlay-container, .ytd-carousel-ad-renderer, ytd-ad-slot-renderer, ytd-action-companion-ad-renderer, ytd-engagement-panel-section-list-renderer, ytd-player-legacy-desktop-watch-ads-renderer, #reaction-control-panel, #emoji-fountain, #fab-container, yt-reaction-control-panel-button-view-model {
@@ -1900,31 +1901,9 @@ namespace Playcipe
     public class Bridge
     {
         public static bool offset = false;
-        public static int[] wd = { 2, 2, 2, 2 };
-        public static int[] wu = { 2, 2, 2, 2 };
-        public static void valchanged(int n, bool val)
-        {
-            if (val)
-            {
-                if (wd[n] <= 1)
-                {
-                    wd[n] = wd[n] + 1;
-                }
-                wu[n] = 0;
-            }
-            else
-            {
-                if (wu[n] <= 1)
-                {
-                    wu[n] = wu[n] + 1;
-                }
-                wd[n] = 0;
-            }
-        }
         public string Sound(string param)
         {
-            valchanged(0, param == "false" & !offset);
-            if (wu[0] == 1)
+            if (!offset)
             {
                 offset = true;
                 Form1.Mute();
