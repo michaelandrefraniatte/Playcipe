@@ -2,8 +2,8 @@
 {
     public class Valuechange
     {
-        public static double[] _valuechange = { 0, 0, 0, 0 };
-        public static double[] _ValueChange = { 0, 0, 0, 0 };
+        public static double[] _valuechange = { 1, 1, 1, 1 };
+        public static double[] _ValueChange = { 1, 1, 1, 1 };
         public double this[int index]
         {
             get { return _ValueChange[index]; }

@@ -67,6 +67,7 @@ namespace Playcipe
         public static bool KeyboardHookButtonDown, KeyboardHookButtonUp;
         private static IntPtr hwnd;
         public static bool starting = true;
+        public static Valuechange ValueChange = new Valuechange();
         public static int[] wd = { 2, 2, 2, 2 };
         public static int[] wu = { 2, 2, 2, 2 };
         public static void valchanged(int n, bool val)
@@ -572,6 +573,19 @@ namespace Playcipe
         public static void VolUp()
         {
             SendMessageW(hwnd, WM_APPCOMMAND, hwnd, (IntPtr)APPCOMMAND_VOLUME_UP);
+        }
+        public static void CutSound(double param)
+        {
+            ValueChange[0] = param;
+            if (Valuechange._ValueChange[0] > 0f)
+            {
+                Mute();
+            }
+            if (Valuechange._ValueChange[0] < 0f)
+            {
+                VolDown();
+                VolUp();
+            }
         }
         private async void KeyboardHook_Hook(KeyboardHook.KBDLLHOOKSTRUCT keyboardStruct) { }
         public const int VK_LBUTTON = (int)0x01;
@@ -1905,19 +1919,9 @@ namespace Playcipe
     [ComVisible(true)]
     public class Bridge
     {
-        public static Valuechange ValueChange = new Valuechange();
         public string CutSound(string param)
         {
-            ValueChange[0] = Convert.ToSingle(param);
-            if (Valuechange._ValueChange[0] > 0f)
-            {
-                Form1.Mute();
-            }
-            if (Valuechange._ValueChange[0] < 0f)
-            {
-                Form1.VolDown();
-                Form1.VolUp();
-            }
+            Form1.CutSound(Convert.ToSingle(param));
             return param;
         }
     }
