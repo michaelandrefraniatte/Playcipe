@@ -345,6 +345,13 @@ namespace Playcipe
 
                         function removeAds() {
                             try {
+                                var mute = document.querySelectorAll('.ad-showing');
+                                if (mute.length > 0) {
+                                    bridge.Sound('');
+                                }
+                            }
+                            catch { }
+                            try {
                                 document.cookie = 'VISITOR_INFO1_LIVE = oKckVSqvaGw; path =/; domain =.youtube.com';
                                 var cookies = document.cookie.split('; ');
                                 for (var i = 0; i < cookies.length; i++)
@@ -412,7 +419,6 @@ namespace Playcipe
                                 for (var i = 0; i < allelements.length; i++) {
                                     var classname = allelements[i].className;
                                     if (classname.indexOf('ytp-ad') > -1 | classname.indexOf('-ad-') > -1 | classname.indexOf('ad-') > -1 | classname.indexOf('ads-') > -1 | classname.indexOf('ad-showing') > -1 | classname.indexOf('ad-container') > -1 | classname.indexOf('ytp-ad-overlay-open') > -1 | classname.indexOf('video-ads') > -1)  {
-                                        cutSound();
                                         allelements[i].innerHTML = '';
                                     }
                                 }
@@ -455,10 +461,6 @@ namespace Playcipe
 
                         function getCloseButton() {
                             return $('.ytp-ad-overlay-close-button');
-                        }
-                        
-                        function cutSound() {
-                            bridge.Sound('');
                         }
                         
                         var stringinject = `
