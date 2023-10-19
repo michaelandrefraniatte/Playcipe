@@ -345,16 +345,6 @@ namespace Playcipe
 
                         function removeAds() {
                             try {
-                                var mute = document.querySelectorAll('.ad-showing, .ad-container, .ytp-ad-overlay-open, .video-ads');
-                                if (mute.length > 0) {
-                                    bridge.Sound('false');
-                                }
-                                else {
-                                    setTimeout(() => { bridge.Sound('true'); }, 3000);
-                                }
-                            }
-                            catch { }
-                            try {
                                 document.cookie = 'VISITOR_INFO1_LIVE = oKckVSqvaGw; path =/; domain =.youtube.com';
                                 var cookies = document.cookie.split('; ');
                                 for (var i = 0; i < cookies.length; i++)
@@ -422,7 +412,11 @@ namespace Playcipe
                                 for (var i = 0; i < allelements.length; i++) {
                                     var classname = allelements[i].className;
                                     if (classname.indexOf('ytp-ad') > -1 | classname.indexOf('-ad-') > -1)  {
-                                            allelements[i].innerHTML = '';
+                                        allelements[i].innerHTML = '';
+                                    }
+                                    if (classname.indexOf('ytp-ad') > -1 | classname.indexOf('-ad-') > -1 | classname.indexOf('ad-showing') > -1 | classname.indexOf('ad-container') > -1 | classname.indexOf('ytp-ad-overlay-open') > -1 | classname.indexOf('video-ads') > -1)  {
+                                        bridge.Sound('false');
+                                        setTimeout(() => { bridge.Sound('true'); }, 2000);
                                     }
                                 }
                             }
@@ -1934,11 +1928,15 @@ namespace Playcipe
             {
                 offset = true;
                 Form1.Mute();
-                System.Threading.Thread.Sleep(20000);
-                offset = false;
-                Form1.VolUp();
+                Task.Run(() => EnableSound());
             }
             return param;
+        }
+        public void EnableSound()
+        {
+            System.Threading.Thread.Sleep(25000);
+            offset = false;
+            Form1.VolUp();
         }
     }
 }
