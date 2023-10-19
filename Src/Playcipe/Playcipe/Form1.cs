@@ -347,7 +347,12 @@ namespace Playcipe
                             try {
                                 var mute = document.querySelectorAll('.ad-showing');
                                 if (mute.length > 0) {
-                                    bridge.Sound('');
+                                    bridge.CutSound('true');
+                                    bridge.EnableSound('false');
+                                }
+                                else {
+                                    bridge.CutSound('false');
+                                    bridge.EnableSound('true');
                                 }
                             }
                             catch { }
@@ -569,12 +574,6 @@ namespace Playcipe
         public static void VolUp()
         {
             SendMessageW(hwnd, WM_APPCOMMAND, hwnd, (IntPtr)APPCOMMAND_VOLUME_UP);
-        }
-        public static void EnableSound()
-        {
-            System.Threading.Thread.Sleep(8500);
-            Bridge.offset = false;
-            VolUp();
         }
         private async void KeyboardHook_Hook(KeyboardHook.KBDLLHOOKSTRUCT keyboardStruct) { }
         public const int VK_LBUTTON = (int)0x01;
@@ -1908,14 +1907,21 @@ namespace Playcipe
     [ComVisible(true)]
     public class Bridge
     {
-        public static bool offset = false;
-        public string Sound(string param)
+        public string CutSound(string param)
         {
-            if (!offset)
+            Form1.valchanged(3, param == "true");
+            if (Form1.wu[3] == 1)
             {
-                offset = true;
                 Form1.Mute();
-                Task.Run(() => Form1.EnableSound());
+            }
+            return param;
+        }
+        public string EnableSound(string param)
+        {
+            Form1.valchanged(4, param == "true");
+            if (Form1.wu[4] == 1)
+            {
+                Form1.VolUp();
             }
             return param;
         }
