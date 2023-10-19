@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Diagnostics;
 using System.Text;
 using System.IO;
+using Valuechanges;
 
 namespace Playcipe
 {
@@ -347,12 +348,10 @@ namespace Playcipe
                             try {
                                 var mute = document.querySelectorAll('.ad-showing');
                                 if (mute.length > 0) {
-                                    bridge.CutSound('true');
-                                    bridge.EnableSound('false');
+                                    bridge.CutSound('1');
                                 }
                                 else {
-                                    bridge.CutSound('false');
-                                    bridge.EnableSound('true');
+                                    bridge.CutSound('0');
                                 }
                             }
                             catch { }
@@ -432,7 +431,6 @@ namespace Playcipe
                             try {
                                 var players = document.getElementById('movie_player');
                                 for (let i = 0; i < players.length; i++) {
-                                    players.classList.remove('ad-showing');
                                     players.classList.remove('ad-interrupting');
                                     players.classList.remove('playing-mode');
                                     players.classList.remove('ytp-autohide');
@@ -1907,20 +1905,17 @@ namespace Playcipe
     [ComVisible(true)]
     public class Bridge
     {
+        public static Valuechange ValueChange = new Valuechange();
         public string CutSound(string param)
         {
-            Form1.valchanged(3, param == "true");
-            if (Form1.wd[3] == 1)
+            ValueChange[0] = Convert.ToSingle(param);
+            if (Valuechange._ValueChange[0] > 0f)
             {
                 Form1.Mute();
             }
-            return param;
-        }
-        public string EnableSound(string param)
-        {
-            Form1.valchanged(4, param == "true");
-            if (Form1.wd[4] == 1)
+            if (Valuechange._ValueChange[0] < 0f)
             {
+                Form1.VolDown();
                 Form1.VolUp();
             }
             return param;

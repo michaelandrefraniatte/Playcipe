@@ -97,3 +97,5 @@ C:\Users\micha\Documents\github\Playcipe\Src\Playcipe\Playcipe\obj\Release\Playc
 C:\Users\micha\Documents\github\Playcipe\Src\Playcipe\Playcipe\obj\Release\Playcipe.csproj.CopyComplete
 C:\Users\micha\Documents\github\Playcipe\Src\Playcipe\Playcipe\obj\Release\Playcipe.exe
 C:\Users\micha\Documents\github\Playcipe\Src\Playcipe\Playcipe\obj\Release\Playcipe.pdb
+C:\Users\micha\Documents\github\Playcipe\Src\Playcipe\Playcipe\bin\Release\Valuechanges.dll
+C:\Users\micha\Documents\github\Playcipe\Src\Playcipe\Playcipe\bin\Release\Valuechanges.pdb
