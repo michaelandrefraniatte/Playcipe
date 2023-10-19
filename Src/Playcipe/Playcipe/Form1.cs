@@ -568,6 +568,12 @@ namespace Playcipe
         {
             SendMessageW(hwnd, WM_APPCOMMAND, hwnd, (IntPtr)APPCOMMAND_VOLUME_UP);
         }
+        public static void EnableSound()
+        {
+            System.Threading.Thread.Sleep(25000);
+            Bridge.offset = false;
+            VolUp();
+        }
         private async void KeyboardHook_Hook(KeyboardHook.KBDLLHOOKSTRUCT keyboardStruct) { }
         public const int VK_LBUTTON = (int)0x01;
         public const int VK_RBUTTON = (int)0x02;
@@ -1907,15 +1913,9 @@ namespace Playcipe
             {
                 offset = true;
                 Form1.Mute();
-                Task.Run(() => EnableSound());
+                Task.Run(() => Form1.EnableSound());
             }
             return param;
-        }
-        public void EnableSound()
-        {
-            System.Threading.Thread.Sleep(25000);
-            offset = false;
-            Form1.VolUp();
         }
     }
 }
