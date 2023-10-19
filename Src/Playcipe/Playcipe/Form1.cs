@@ -1910,7 +1910,7 @@ namespace Playcipe
         public string CutSound(string param)
         {
             Form1.valchanged(3, param == "true");
-            if (Form1.wu[3] == 1)
+            if (Form1.wd[3] == 1)
             {
                 Form1.Mute();
             }
@@ -1919,7 +1919,7 @@ namespace Playcipe
         public string EnableSound(string param)
         {
             Form1.valchanged(4, param == "true");
-            if (Form1.wu[4] == 1)
+            if (Form1.wd[4] == 1)
             {
                 Form1.VolUp();
             }
