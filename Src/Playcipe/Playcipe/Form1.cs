@@ -572,7 +572,7 @@ namespace Playcipe
         }
         public static void EnableSound()
         {
-            System.Threading.Thread.Sleep(25000);
+            System.Threading.Thread.Sleep(8500);
             Bridge.offset = false;
             VolUp();
         }
