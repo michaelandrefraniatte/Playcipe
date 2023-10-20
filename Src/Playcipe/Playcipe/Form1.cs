@@ -599,12 +599,15 @@ namespace Playcipe
             {
                 Mute();
                 string stringinject = @"
-                        var imglink = window.location.href.replace('https://www.youtube.com/watch?v=', 'https://i.ytimg.com/vi/') + '/hqdefault.jpg';
-                        var element = document.getElementsByTagName('video');
-                        element[0].style.backgroundImage = `url(\'` + imglink + `\')`;
-                        element[0].style.backgroundSize = 'contain';
-                        element[0].style.backgroundRepeat = 'no-repeat';
-                        element[0].style.backgroundPosition = 'center';
+                        var link = window.location.href;
+                        var imglink = link.replace('https://www.youtube.com/watch?v=', 'https://i.ytimg.com/vi/') + '/0.jpg';
+                        var player = document.getElementById('player');
+                        if (player) {
+                            player.style.backgroundImage = `url(\'` + imglink + `\')`;
+                            player.style.backgroundSize = 'contain';
+                            player.style.backgroundRepeat = 'no-repeat';
+                            player.style.backgroundPosition = 'center';
+                        }
                     ".Replace("\r\n", " ");
                 execScriptHelper(stringinject);
             }
@@ -613,8 +616,10 @@ namespace Playcipe
                 VolDown();
                 VolUp();
                 string stringinject = @"
-                        var element = document.getElementsByTagName('video');
-                        element[0].style.backgroundImage = `none`;
+                        var player = document.getElementById('player');
+                        if (player) {
+                            player.style.backgroundImage = `none`;
+                        }
                     ".Replace("\r\n", " ");
                 execScriptHelper(stringinject);
             }
