@@ -165,6 +165,15 @@ namespace Playcipe
                 this.Controls.Remove(pictureBox1);
             }
         }
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F1)
+            {
+                const string message = "• Author: Michaël André Franiatte.\n\r\n\r• Copyrights: All rights reserved, no permissions granted.\n\r\n\r• Contact: michael.franiatte@gmail.com.";
+                const string caption = "About";
+                MessageBox.Show(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
         private void CoreWebView2_WebResourceRequested(object sender, CoreWebView2WebResourceRequestedEventArgs e)
         {
             CoreWebView2HttpRequestHeaders requestHeaders = e.Request.Headers;
@@ -189,6 +198,15 @@ namespace Playcipe
                 System.Threading.SynchronizationContext.Current.Post((_) =>
                 {
                     webView21.CoreWebView2.CookieManager.DeleteAllCookies();
+                    string root = Application.StartupPath + @"\Playcipe.exe.WebView2";
+                    if (Directory.Exists(root))
+                    {
+                        Directory.Delete(root);
+                    }
+                    string stringinject = @"
+                        window.location.reload(false);
+                    ".Replace("\r\n", " ");
+                    execScriptHelper(stringinject);
                 }, null);
             };
             menuList.Insert(menuList.Count, newItem);
