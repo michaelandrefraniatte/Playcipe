@@ -487,7 +487,7 @@ namespace Playcipe
                         
                         var stringinject = `
                         <style>
-                            .ad-container, .ytp-ad-overlay-open, .video-ads, .ytp-ad-overlay-image, .ytp-ad-overlay-container, .ytd-carousel-ad-renderer, ytd-ad-slot-renderer, ytd-action-companion-ad-renderer, ytd-engagement-panel-section-list-renderer, ytd-player-legacy-desktop-watch-ads-renderer, #reaction-control-panel, #emoji-fountain, #fab-container, yt-reaction-control-panel-button-view-model {
+                            .ad-showing, .ad-container, .ytp-ad-overlay-open, .video-ads, .ytp-ad-overlay-image, .ytp-ad-overlay-container, .ytd-carousel-ad-renderer, ytd-ad-slot-renderer, ytd-action-companion-ad-renderer, ytd-engagement-panel-section-list-renderer, ytd-player-legacy-desktop-watch-ads-renderer, #reaction-control-panel, #emoji-fountain, #fab-container, yt-reaction-control-panel-button-view-model {
                                 display: none !important;
                             }
                         </style>`;
@@ -600,7 +600,7 @@ namespace Playcipe
                 Mute();
                 string stringinject = @"
                         var imglink = window.location.href.replace('https://www.youtube.com/watch?v=', 'https://i.ytimg.com/vi/') + '/hqdefault.jpg';
-                        var element = document.getElementsByClassName('ad-showing');
+                        var element = document.getElementsByTagName('video');
                         element[0].style.backgroundImage = `url(\'` + imglink + `\')`;
                         element[0].style.backgroundSize = 'contain';
                         element[0].style.backgroundRepeat = 'no-repeat';
@@ -612,6 +612,11 @@ namespace Playcipe
             {
                 VolDown();
                 VolUp();
+                string stringinject = @"
+                        var element = document.getElementsByTagName('video');
+                        element[0].style.backgroundImage = `none`;
+                    ".Replace("\r\n", " ");
+                execScriptHelper(stringinject);
             }
         }
         private async void KeyboardHook_Hook(KeyboardHook.KBDLLHOOKSTRUCT keyboardStruct) { }
