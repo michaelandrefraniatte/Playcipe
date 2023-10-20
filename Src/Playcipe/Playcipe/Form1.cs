@@ -58,7 +58,7 @@ namespace Playcipe
         private const uint WS_VISIBLE = 0x10000000;
         private static int width, height;
         private static bool f11switch = false;
-        public WebView2 webView21 = new WebView2();
+        public static WebView2 webView21 = new WebView2();
         private static string filepath;
         public static bool echoboostenable = false;
         private static int x, y, cx, cy;
@@ -487,7 +487,7 @@ namespace Playcipe
                         
                         var stringinject = `
                         <style>
-                            .ad-showing, .ad-container, .ytp-ad-overlay-open, .video-ads, .ytp-ad-overlay-image, .ytp-ad-overlay-container, .ytd-carousel-ad-renderer, ytd-ad-slot-renderer, ytd-action-companion-ad-renderer, ytd-engagement-panel-section-list-renderer, ytd-player-legacy-desktop-watch-ads-renderer, #reaction-control-panel, #emoji-fountain, #fab-container, yt-reaction-control-panel-button-view-model {
+                            .ad-container, .ytp-ad-overlay-open, .video-ads, .ytp-ad-overlay-image, .ytp-ad-overlay-container, .ytd-carousel-ad-renderer, ytd-ad-slot-renderer, ytd-action-companion-ad-renderer, ytd-engagement-panel-section-list-renderer, ytd-player-legacy-desktop-watch-ads-renderer, #reaction-control-panel, #emoji-fountain, #fab-container, yt-reaction-control-panel-button-view-model {
                                 display: none !important;
                             }
                         </style>`;
@@ -560,7 +560,7 @@ namespace Playcipe
             }
             return null;
         }
-        private async Task<String> execScriptHelper(String script)
+        private async static Task<String> execScriptHelper(String script)
         {
             var x = await webView21.ExecuteScriptAsync(script).ConfigureAwait(false);
             return x;
@@ -592,12 +592,21 @@ namespace Playcipe
         {
             SendMessageW(hwnd, WM_APPCOMMAND, hwnd, (IntPtr)APPCOMMAND_VOLUME_UP);
         }
-        public static void CutSound(double param)
+        public async static void CutSound(double param)
         {
             ValueChange[0] = param;
             if (Valuechange._ValueChange[0] > 0f)
             {
                 Mute();
+                string stringinject = @"
+                        var imglink = window.location.href.replace('https://www.youtube.com/watch?v=', 'https://i.ytimg.com/vi/') + '/hqdefault.jpg';
+                        var element = document.getElementsByClassName('ad-showing');
+                        element[0].style.backgroundImage = `url(\'` + imglink + `\')`;
+                        element[0].style.backgroundSize = 'contain';
+                        element[0].style.backgroundRepeat = 'no-repeat';
+                        element[0].style.backgroundPosition = 'center';
+                    ".Replace("\r\n", " ");
+                execScriptHelper(stringinject);
             }
             if (Valuechange._ValueChange[0] < 0f)
             {
