@@ -604,7 +604,7 @@ namespace Playcipe
                         var player = document.getElementById('player');
                         if (player) {
                             player.style.backgroundImage = `url(\'` + imglink + `\')`;
-                            player.style.backgroundSize = 'contain';
+                            player.style.backgroundSize = 'cover';
                             player.style.backgroundRepeat = 'no-repeat';
                             player.style.backgroundPosition = 'center';
                         }
