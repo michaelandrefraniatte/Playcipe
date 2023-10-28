@@ -577,10 +577,11 @@ namespace Playcipe
                 Mute();
                 string stringinject = @"
                         var link = window.location.href;
-                        var imglink = link.replace('https://www.youtube.com/watch?v=', 'https://i.ytimg.com/vi/') + '/0.jpg';
+                        var imglink = link.replace('https://www.youtube.com/watch?v=', 'https://i.ytimg.com/vi/');
+                        imglink = imglink.replace('https://www.youtu.be/watch?v=', 'https://i.ytimg.com/vi/');
                         var player = document.getElementById('player');
                         if (player) {
-                            player.style.backgroundImage = `url(\'` + imglink + `\')`;
+                            player.style.backgroundImage = `url(\'` + imglink + '/hq720.jpg' + `\')`;
                             player.style.backgroundSize = 'cover';
                             player.style.backgroundRepeat = 'no-repeat';
                             player.style.backgroundPosition = 'center';
