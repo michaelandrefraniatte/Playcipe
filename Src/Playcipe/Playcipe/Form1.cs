@@ -444,7 +444,7 @@ namespace Playcipe
                         try {
                             var stringinject = `
                             <style>
-                                .ad-showing, .ad-container, .ytp-ad-overlay-open, .video-ads, .ytp-ad-overlay-image, .ytp-ad-overlay-container, .ytd-carousel-ad-renderer, ytd-ad-slot-renderer, ytd-action-companion-ad-renderer, ytd-engagement-panel-section-list-renderer, ytd-player-legacy-desktop-watch-ads-renderer, #reaction-control-panel, #emoji-fountain, #fab-container, yt-reaction-control-panel-button-view-model {
+                                .ad-showing, .ad-container, .ytp-ad-overlay-open, .video-ads, .ytp-ad-overlay-image, .ytp-ad-overlay-container, .ytd-carousel-ad-renderer, ytd-ad-slot-renderer, ytd-action-companion-ad-renderer, ytd-engagement-panel-section-list-renderer, ytd-player-legacy-desktop-watch-ads-renderer, #reaction-control-panel, #emoji-fountain, #fab-container, yt-reaction-control-panel-button-view-model, tp-yt-paper-dialog {
                                     display: none !important;
                                 }
                             </style>`;
