@@ -663,7 +663,11 @@ namespace Playcipe
                 string stringinject = @"
                         var player = document.getElementById('player');
                         if (player) {
-                            player.style.backgroundImage = `none`;
+                            player.style.backgroundImage = 'none';
+                        }
+                        var video = document.querySelector('.html5-video-player');
+                        if (video) {
+                            video.style.display = 'block';
                         }
                     ".Replace("\r\n", " ");
                 execScriptHelper(stringinject);
