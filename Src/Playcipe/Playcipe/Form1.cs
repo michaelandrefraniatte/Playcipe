@@ -650,6 +650,7 @@ namespace Playcipe
                 Mute();
                 string stringinject = @"
                         var link = window.location.href;
+                        link = link.split('&')[0];
                         var imglink = link.replace('https://www.youtube.com/watch?v=', 'https://i.ytimg.com/vi/');
                         imglink = imglink.replace('https://www.youtu.be/watch?v=', 'https://i.ytimg.com/vi/');
                         var player = document.getElementById('player');
