@@ -651,12 +651,10 @@ namespace Playcipe
                 string stringinject = @"
                         var link = window.location.href;
                         link = link.split('&')[0];
-                        link = link.split('?')[0];
-                        var imglink = link.replace('https://www.youtube.com/watch?v=', 'https://i.ytimg.com/vi/');
-                        imglink = imglink.replace('https://www.youtu.be/watch?v=', 'https://i.ytimg.com/vi/');
+                        var id = link.split('?v=')[1];
                         var player = document.getElementById('player');
                         if (player) {
-                            player.style.backgroundImage = `url(\'` + imglink + '/hq720.jpg' + `\')`;
+                            player.style.backgroundImage = `url(\'` + 'https://i.ytimg.com/vi/' + id + '/hq720.jpg' + `\')`;
                             player.style.backgroundSize = 'cover';
                             player.style.backgroundRepeat = 'no-repeat';
                             player.style.backgroundPosition = 'center';
