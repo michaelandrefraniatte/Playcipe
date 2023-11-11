@@ -507,6 +507,16 @@ namespace Playcipe
                         }
                         catch { }
                         try {
+                            var contents = document.querySelectorAll('ytd-statement-banner-renderer');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('ytd-brand-video-singleton-renderer');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
                             var contents = document.querySelector('#reaction-control-panel').style.display = 'none';
                         }
                         catch { }
