@@ -198,11 +198,6 @@ namespace Playcipe
                 System.Threading.SynchronizationContext.Current.Post((_) =>
                 {
                     webView21.CoreWebView2.CookieManager.DeleteAllCookies();
-                    string root = Application.StartupPath + @"\Playcipe.exe.WebView2";
-                    if (Directory.Exists(root))
-                    {
-                        Directory.Delete(root);
-                    }
                     string stringinject = @"
                         window.location.reload(false);
                     ".Replace("\r\n", " ");
