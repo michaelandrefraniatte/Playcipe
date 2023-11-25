@@ -316,7 +316,7 @@ namespace Playcipe
         }
         private async void timer1_Tick(object sender, EventArgs e)
         {
-            if (File.Exists(Application.StartupPath + @"\Playcipe.exe.WebView2\EBWebView\Local State"))
+            if (File.Exists(Application.StartupPath + @"\Playcipe.exe.WebView2\EBWebView\Default\IndexedDB\https_www.youtube.com_0.indexeddb.leveldb/LOG.old"))
             {
                 try
                 {
