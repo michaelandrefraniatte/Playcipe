@@ -337,6 +337,13 @@ namespace Playcipe
                         }
                         catch { }
                         try {
+                            var skipButton = document.querySelector('.ytp-ad-skip-button-modern');
+                            if (skipButton) {
+                                skipButton.click();
+                            }
+                        }
+                        catch { }
+                        try {
                             var closeButton = document.querySelector('.ytp-ad-overlay-close-button');
                             if (closeButton) {
                                 closeButton.click();
