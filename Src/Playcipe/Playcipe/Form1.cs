@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Text;
 using System.IO;
 using Valuechanges;
+using System.Threading;
 
 namespace Playcipe
 {
@@ -66,7 +67,7 @@ namespace Playcipe
         public static int vkCode, scanCode;
         public static bool KeyboardHookButtonDown, KeyboardHookButtonUp;
         private static IntPtr hwnd;
-        public static bool starting = true, cutsound = false;
+        public static bool starting = true, cutsound = false, emptycookies = false;
         public static Valuechange ValueChange = new Valuechange();
         public static int[] wd = { 2, 2, 2, 2 };
         public static int[] wu = { 2, 2, 2, 2 };
@@ -197,6 +198,7 @@ namespace Playcipe
             {
                 System.Threading.SynchronizationContext.Current.Post((_) =>
                 {
+                    emptycookies = true;
                     webView21.CoreWebView2.CookieManager.DeleteAllCookies();
                     string stringinject = @"
                         window.location.reload(false);
@@ -314,9 +316,11 @@ namespace Playcipe
         }
         private async void timer1_Tick(object sender, EventArgs e)
         {
-            try
+            if (File.Exists(Application.StartupPath + @"\Playcipe.exe.WebView2\EBWebView\Local State"))
             {
-                string stringinject = @"
+                try
+                {
+                    string stringinject = @"
                     if (window.location.href.indexOf('youtube') > -1 | window.location.href.indexOf('youtu.be') > -1) {
                         try {
                             var playButton = document.querySelector('.ytp-large-play-button:visible');
@@ -525,9 +529,10 @@ namespace Playcipe
                         catch { }
                     }
                     ";
-                await execScriptHelper(stringinject);
+                    await execScriptHelper(stringinject);
+                }
+                catch { }
             }
-            catch { }
         }
         private async void timer2_Tick(object sender, EventArgs e)
         {
@@ -618,10 +623,40 @@ namespace Playcipe
         {
             keyboardHook.Hook -= new KeyboardHook.KeyboardHookCallback(KeyboardHook_Hook);
             keyboardHook.Uninstall();
+            if (emptycookies)
+                webView21.CoreWebView2.CookieManager.DeleteAllCookies();
+            webView21.Dispose();
+            if (emptycookies)
+            {
+                Thread.Sleep(1000);
+                string root = Application.StartupPath + @"\Playcipe.exe.WebView2";
+                if (Directory.Exists(root))
+                {
+                    DeleteDirectory(root);
+                }
+            }
+        }
+        public static void DeleteDirectory(string path)
+        {
+            foreach (string directory in Directory.GetDirectories(path))
+            {
+                DeleteDirectory(directory);
+            }
+            try
+            {
+                Directory.Delete(path, true);
+            }
+            catch (IOException)
+            {
+                Directory.Delete(path, true);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Directory.Delete(path, true);
+            }
         }
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            webView21.Dispose();
             if (echoboostenable)
             {
                 var proc = Process.GetProcessesByName("EchoBoost");
