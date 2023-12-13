@@ -377,9 +377,9 @@ namespace Playcipe
                         }
                         catch { }
                         try {
-                            var element = document.getElementsByClassName('ytp-ad-overlay-close-button');
-                            for (var i=0;i<element.length; i++) {
-                                element[i].click();
+                            var elements = document.getElementsByClassName('ytp-ad-overlay-close-button');
+                            for (var i=0;i<elements.length; i++) {
+                                elements[i].click();
                             }
                         }
                         catch { }
@@ -548,13 +548,15 @@ namespace Playcipe
             {
                 stringinject = @"
                     try {
-                        const bridge = chrome.webview.hostObjects.bridge;
-                        var mute = document.querySelectorAll('.ad-showing');
-                        if (mute.length > 0) {
-                            bridge.CutSound('1');
-                        }
-                        else {
-                            bridge.CutSound('0');
+                        if (window.location.href.indexOf('youtube') > -1 | window.location.href.indexOf('youtu.be') > -1) {
+                            const bridge = chrome.webview.hostObjects.bridge;
+                            var mute = document.querySelectorAll('.ad-showing');
+                            if (mute.length > 0) {
+                                bridge.CutSound('1');
+                            }
+                            else {
+                                bridge.CutSound('0');
+                            }
                         }
                     }
                     catch { }
