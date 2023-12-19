@@ -323,34 +323,6 @@ namespace Playcipe
                     string stringinject = @"
                     if (window.location.href.indexOf('youtube') > -1 | window.location.href.indexOf('youtu.be') > -1) {
                         try {
-                            var playButton = document.querySelector('.ytp-large-play-button:visible');
-                            if (playButton) {
-                                playButton.click();
-                            }
-                        }
-                        catch { }
-                        try {
-                            var skipButton = document.querySelector('.ytp-ad-skip-button');
-                            if (skipButton) {
-                                skipButton.click();
-                            }
-                        }
-                        catch { }
-                        try {
-                            var skipButton = document.querySelector('.ytp-ad-skip-button-modern');
-                            if (skipButton) {
-                                skipButton.click();
-                            }
-                        }
-                        catch { }
-                        try {
-                            var closeButton = document.querySelector('.ytp-ad-overlay-close-button');
-                            if (closeButton) {
-                                closeButton.click();
-                            }
-                        }
-                        catch { }
-                        try {
                             document.cookie = 'VISITOR_INFO1_LIVE = oKckVSqvaGw; path =/; domain =.youtube.com';
                             var cookies = document.cookie.split('; ');
                             for (var i = 0; i < cookies.length; i++)
@@ -547,8 +519,42 @@ namespace Playcipe
             try
             {
                 stringinject = @"
-                    try {
-                        if (window.location.href.indexOf('youtube') > -1 | window.location.href.indexOf('youtu.be') > -1) {
+                    if (window.location.href.indexOf('youtube') > -1 | window.location.href.indexOf('youtu.be') > -1) {
+                        try {
+                            var skipButton = document.querySelector('.ytp-ad-skip-button-modern');
+                            if (skipButton) {
+                                setTimeout(() => { 
+                                    skipButton.click(); 
+                                }, '6000');
+                                skipButton.style.zIndex = '10';
+                            }
+                        }
+                        catch { }
+                        try {
+                            var skipButton = document.querySelector('.ytp-ad-skip-button');
+                            if (skipButton) {
+                                setTimeout(() => { 
+                                    skipButton.click(); 
+                                }, '6000');
+                                skipButton.style.zIndex = '10';
+                            }
+                        }
+                        catch { }
+                        try {
+                            var closeButton = document.querySelector('.ytp-ad-overlay-close-button');
+                            if (closeButton) {
+                                closeButton.click();
+                            }
+                        }
+                        catch { }
+                        try {
+                            var playButton = document.querySelector('.ytp-large-play-button:visible');
+                            if (playButton) {
+                                playButton.click();
+                            }
+                        }
+                        catch { }
+                        try {
                             const bridge = chrome.webview.hostObjects.bridge;
                             var mute = document.querySelectorAll('.ad-showing');
                             if (mute.length > 0) {
@@ -558,8 +564,8 @@ namespace Playcipe
                                 bridge.CutSound('0');
                             }
                         }
+                        catch { }
                     }
-                    catch { }
                     ";
                 await execScriptHelper(stringinject);
             }
