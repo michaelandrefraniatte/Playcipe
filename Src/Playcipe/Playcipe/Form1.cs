@@ -171,16 +171,6 @@ namespace Playcipe
                 }
                 catch { }
             }
-            string stringinject = @"
-                        try {
-                            var script = document.createElement('script');
-                            script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js';
-                            var head = document.getElementsByTagName('head')[0];
-                            head.appendChild(script);
-                        }
-                        catch { }
-                    ".Replace("\r\n", " ");
-            execScriptHelper(stringinject);
         }
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
@@ -521,6 +511,51 @@ namespace Playcipe
                             skipButton.forEach(elem => elem.style.zIndex = '10');
                         }
                         catch { }
+                        try {
+                            var contents = document.querySelectorAll('.ad-showing');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('.ad-container');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('.ytp-ad-overlay-open');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('.video-ads');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('.ytp-ad-overlay-image');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('.ytp-ad-overlay-container');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('.ytd-carousel-ad-renderer');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('ytd-ad-slot-renderer');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('ytd-action-companion-ad-renderer');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
                     }
                     ";
                     await execScriptHelper(stringinject);
@@ -684,51 +719,6 @@ namespace Playcipe
                 Mute(); 
                 stringinject = @"
                         try {
-                            var contents = document.querySelectorAll('.ad-showing');
-                            contents.forEach(elem => elem.style.display = 'none');
-                        }
-                        catch { }
-                        try {
-                            var contents = document.querySelectorAll('.ad-container');
-                            contents.forEach(elem => elem.style.display = 'none');
-                        }
-                        catch { }
-                        try {
-                            var contents = document.querySelectorAll('.ytp-ad-overlay-open');
-                            contents.forEach(elem => elem.style.display = 'none');
-                        }
-                        catch { }
-                        try {
-                            var contents = document.querySelectorAll('.video-ads');
-                            contents.forEach(elem => elem.style.display = 'none');
-                        }
-                        catch { }
-                        try {
-                            var contents = document.querySelectorAll('.ytp-ad-overlay-image');
-                            contents.forEach(elem => elem.style.display = 'none');
-                        }
-                        catch { }
-                        try {
-                            var contents = document.querySelectorAll('.ytp-ad-overlay-container');
-                            contents.forEach(elem => elem.style.display = 'none');
-                        }
-                        catch { }
-                        try {
-                            var contents = document.querySelectorAll('.ytd-carousel-ad-renderer');
-                            contents.forEach(elem => elem.style.display = 'none');
-                        }
-                        catch { }
-                        try {
-                            var contents = document.querySelectorAll('ytd-ad-slot-renderer');
-                            contents.forEach(elem => elem.style.display = 'none');
-                        }
-                        catch { }
-                        try {
-                            var contents = document.querySelectorAll('ytd-action-companion-ad-renderer');
-                            contents.forEach(elem => elem.style.display = 'none');
-                        }
-                        catch { }
-                        try {
                             var link = window.location.href;
                             link = link.split('&')[0];
                             var id = link.split('?v=')[1];
@@ -742,21 +732,38 @@ namespace Playcipe
                         }
                         catch { }
                         try {
-                            var adSkipButtonModern = setInterval(() => {
-                                $('.ytp-ad-skip-button-modern').trigger('click');
-                            }, 10000);
-                            setTimeout(() => {
-                                clearInterval(adSkipButtonModern);
-                            }, '120000');
+                            var script = document.createElement('script');
+                            script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js';
+                            var head = document.getElementsByTagName('head')[0];
+                            head.appendChild(script);
                         }
                         catch { }
                         try {
-                            var adSkipButton = setInterval(() => {
-                                $('.ytp-ad-skip-button').trigger('click');
-                            }, 10000);
-                            setTimeout(() => {
-                                clearInterval(adSkipButton);
-                            }, '120000');
+                            (function() {
+                                var adSkipButtonModern = setInterval(() => {
+                                    try {
+                                        $('.ytp-ad-skip-button-modern').trigger('click');
+                                    }
+                                    catch { }
+                                }, 10000);
+                                setTimeout(() => {
+                                    clearInterval(adSkipButtonModern);
+                                }, '120000');
+                            })();
+                        }
+                        catch { }
+                        try {
+                            (function() {
+                                var adSkipButton = setInterval(() => {
+                                    try {
+                                        $('.ytp-ad-skip-button').trigger('click');
+                                    }
+                                    catch { }
+                                }, 10000);
+                                setTimeout(() => {
+                                    clearInterval(adSkipButton);
+                                }, '120000');
+                            })();
                         }
                         catch { }
                     ".Replace("\r\n", " ");
