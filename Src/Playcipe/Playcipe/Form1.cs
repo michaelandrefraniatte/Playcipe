@@ -732,8 +732,15 @@ namespace Playcipe
                         }
                         catch { }
                         try {
-                            injectScript('https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
-                            .then(() => {
+                            var script = document.createElement('script');
+                            script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js';
+                            script.async = false;
+                            var head = document.getElementsByTagName('head')[0];
+                            head.appendChild(script);
+                        }
+                        catch { }
+                        try {
+                            (function() {
                                 var adSkipButtonModern = setInterval(() => {
                                     try {
                                         $('.ytp-ad-skip-button-modern').trigger('click');
@@ -743,6 +750,11 @@ namespace Playcipe
                                 setTimeout(() => {
                                     clearInterval(adSkipButtonModern);
                                 }, '120000');
+                            })();
+                        }
+                        catch { }
+                        try {
+                            (function() {
                                 var adSkipButton = setInterval(() => {
                                     try {
                                         $('.ytp-ad-skip-button').trigger('click');
@@ -752,18 +764,7 @@ namespace Playcipe
                                 setTimeout(() => {
                                     clearInterval(adSkipButton);
                                 }, '120000');
-                            }).catch(error => {
-                                console.error(error);
-                            });
-                            function injectScript(src) {
-                                return new Promise((resolve, reject) => {
-                                    const script = document.createElement('script');
-                                    script.src = src;
-                                    script.addEventListener('load', resolve);
-                                    script.addEventListener('error', e => reject(e.error));
-                                    document.head.appendChild(script);
-                                });
-                            }
+                            })();
                         }
                         catch { }
                     ".Replace("\r\n", " ");
