@@ -126,6 +126,8 @@ namespace Playcipe
             webView21.CoreWebView2.AddHostObjectToScript("bridge", new Bridge());
             webView21.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
             webView21.CoreWebView2.ContextMenuRequested += CoreWebView2_ContextMenuRequested;
+            webView21.CoreWebView2.DOMContentLoaded += CoreWebView2_DOMContentLoaded;
+            webView21.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted;
             this.Controls.Add(webView21);
             using (StreamReader file = new StreamReader("params.txt"))
             {
@@ -159,12 +161,26 @@ namespace Playcipe
             if (starting)
             {
                 starting = false;
-                this.Controls.Remove(progressBar1);
-                this.Controls.Remove(label1);
-                this.Controls.Remove(label2);
-                this.Controls.Remove(label3);
-                this.Controls.Remove(pictureBox1);
+                try
+                {
+                    this.Controls.Remove(progressBar1);
+                    this.Controls.Remove(label1);
+                    this.Controls.Remove(label2);
+                    this.Controls.Remove(label3);
+                    this.Controls.Remove(pictureBox1);
+                }
+                catch { }
             }
+            string stringinject = @"
+                        try {
+                            var script = document.createElement('script');
+                            script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js';
+                            var head = document.getElementsByTagName('head')[0];
+                            head.appendChild(script);
+                        }
+                        catch { }
+                    ".Replace("\r\n", " ");
+            execScriptHelper(stringinject);
         }
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
@@ -314,6 +330,12 @@ namespace Playcipe
                 }
             }
         }
+        private void CoreWebView2_DOMContentLoaded(object sender, CoreWebView2DOMContentLoadedEventArgs e)
+        {
+        }
+        private void CoreWebView2_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
+        {
+        }
         private async void timer1_Tick(object sender, EventArgs e)
         {
             if (File.Exists(Application.StartupPath + @"\Playcipe.exe.WebView2\EBWebView\Default\IndexedDB\https_www.youtube.com_0.indexeddb.leveldb/LOG.old"))
@@ -420,51 +442,6 @@ namespace Playcipe
                         }
                         catch { }
                         try {
-                            var contents = document.querySelectorAll('.ad-showing');
-                            contents.forEach(elem => elem.style.display = 'none');
-                        }
-                        catch { }
-                        try {
-                            var contents = document.querySelectorAll('.ad-container');
-                            contents.forEach(elem => elem.style.display = 'none');
-                        }
-                        catch { }
-                        try {
-                            var contents = document.querySelectorAll('.ytp-ad-overlay-open');
-                            contents.forEach(elem => elem.style.display = 'none');
-                        }
-                        catch { }
-                        try {
-                            var contents = document.querySelectorAll('.video-ads');
-                            contents.forEach(elem => elem.style.display = 'none');
-                        }
-                        catch { }
-                        try {
-                            var contents = document.querySelectorAll('.ytp-ad-overlay-image');
-                            contents.forEach(elem => elem.style.display = 'none');
-                        }
-                        catch { }
-                        try {
-                            var contents = document.querySelectorAll('.ytp-ad-overlay-container');
-                            contents.forEach(elem => elem.style.display = 'none');
-                        }
-                        catch { }
-                        try {
-                            var contents = document.querySelectorAll('.ytd-carousel-ad-renderer');
-                            contents.forEach(elem => elem.style.display = 'none');
-                        }
-                        catch { }
-                        try {
-                            var contents = document.querySelectorAll('ytd-ad-slot-renderer');
-                            contents.forEach(elem => elem.style.display = 'none');
-                        }
-                        catch { }
-                        try {
-                            var contents = document.querySelectorAll('ytd-action-companion-ad-renderer');
-                            contents.forEach(elem => elem.style.display = 'none');
-                        }
-                        catch { }
-                        try {
                             var contents = document.querySelectorAll('ytd-engagement-panel-section-list-renderer');
                             contents.forEach(elem => elem.style.display = 'none');
                         }
@@ -506,40 +483,6 @@ namespace Playcipe
                             var contents = document.querySelector('#fab-container').style.display = 'none';
                         }
                         catch { }
-                    }
-                    ";
-                    await execScriptHelper(stringinject);
-                }
-                catch { }
-            }
-        }
-        private async void timer2_Tick(object sender, EventArgs e)
-        {
-            string stringinject = "";
-            try
-            {
-                stringinject = @"
-                    if (window.location.href.indexOf('youtube') > -1 | window.location.href.indexOf('youtu.be') > -1) {
-                        try {
-                            var skipButton = document.querySelector('.ytp-ad-skip-button-modern');
-                            if (skipButton) {
-                                setTimeout(() => { 
-                                    skipButton.click(); 
-                                }, '6000');
-                                skipButton.style.zIndex = '10';
-                            }
-                        }
-                        catch { }
-                        try {
-                            var skipButton = document.querySelector('.ytp-ad-skip-button');
-                            if (skipButton) {
-                                setTimeout(() => { 
-                                    skipButton.click(); 
-                                }, '6000');
-                                skipButton.style.zIndex = '10';
-                            }
-                        }
-                        catch { }
                         try {
                             var closeButton = document.querySelector('.ytp-ad-overlay-close-button');
                             if (closeButton) {
@@ -555,16 +498,51 @@ namespace Playcipe
                         }
                         catch { }
                         try {
-                            const bridge = chrome.webview.hostObjects.bridge;
-                            var mute = document.querySelectorAll('.ad-showing');
-                            if (mute.length > 0) {
-                                bridge.CutSound('1');
-                            }
-                            else {
-                                bridge.CutSound('0');
-                            }
+                            var skipButton = document.querySelectorAll('.ytp-ad-skip-button');
+                            skipButton.forEach(elem => elem.click());
+                            skipButton.forEach(elem => elem.style.zIndex = '10');
                         }
                         catch { }
+                        try {
+                            var skipButton = document.querySelectorAll('.ytp-ad-skip-button-modern');
+                            skipButton.forEach(elem => elem.click());
+                            skipButton.forEach(elem => elem.style.zIndex = '10');
+                        }
+                        catch { }
+                        try {
+                            var skipButton = document.getElementsByClassName('ytp-ad-skip-button');
+                            skipButton.forEach(elem => elem.click());
+                            skipButton.forEach(elem => elem.style.zIndex = '10');
+                        }
+                        catch { }
+                        try {
+                            var skipButton = document.getElementsByClassName('ytp-ad-skip-button-modern');
+                            skipButton.forEach(elem => elem.click());
+                            skipButton.forEach(elem => elem.style.zIndex = '10');
+                        }
+                        catch { }
+                    }
+                    ";
+                    await execScriptHelper(stringinject);
+                }
+                catch { }
+            }
+        }
+        private async void timer2_Tick(object sender, EventArgs e)
+        {
+            string stringinject = "";
+            try
+            {
+                stringinject = @"
+                    if (window.location.href.indexOf('youtube') > -1 | window.location.href.indexOf('youtu.be') > -1) {
+                        const bridge = chrome.webview.hostObjects.bridge;
+                        var mute = document.querySelectorAll('.ad-showing');
+                        if (mute.length > 0) {
+                            bridge.CutSound('1');
+                        }
+                        else {
+                            bridge.CutSound('0');
+                        }
                     }
                     ";
                 await execScriptHelper(stringinject);
@@ -698,22 +676,89 @@ namespace Playcipe
         }
         public async static void CutSound(double param)
         {
+            string stringinject = "";
             ValueChange[0] = param;
             if (Valuechange._ValueChange[0] > 0f)
             {
                 cutsound = true;
-                Mute();
-                string stringinject = @"
-                        var link = window.location.href;
-                        link = link.split('&')[0];
-                        var id = link.split('?v=')[1];
-                        var player = document.getElementById('player');
-                        if (player) {
-                            player.style.backgroundImage = `url(\'` + 'https://i.ytimg.com/vi/' + id + '/hq720.jpg' + `\')`;
-                            player.style.backgroundSize = 'cover';
-                            player.style.backgroundRepeat = 'no-repeat';
-                            player.style.backgroundPosition = 'center';
+                Mute(); 
+                stringinject = @"
+                        try {
+                            var contents = document.querySelectorAll('.ad-showing');
+                            contents.forEach(elem => elem.style.display = 'none');
                         }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('.ad-container');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('.ytp-ad-overlay-open');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('.video-ads');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('.ytp-ad-overlay-image');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('.ytp-ad-overlay-container');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('.ytd-carousel-ad-renderer');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('ytd-ad-slot-renderer');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('ytd-action-companion-ad-renderer');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var link = window.location.href;
+                            link = link.split('&')[0];
+                            var id = link.split('?v=')[1];
+                            var player = document.getElementById('player');
+                            if (player) {
+                                player.style.backgroundImage = `url(\'` + 'https://i.ytimg.com/vi/' + id + '/hq720.jpg' + `\')`;
+                                player.style.backgroundSize = 'cover';
+                                player.style.backgroundRepeat = 'no-repeat';
+                                player.style.backgroundPosition = 'center';
+                            }
+                        }
+                        catch { }
+                        try {
+                            var adSkipButtonModern = setInterval(() => {
+                                $('.ytp-ad-skip-button-modern').trigger('click');
+                            }, 10000);
+                            setTimeout(() => {
+                                clearInterval(adSkipButtonModern);
+                            }, '120000');
+                        }
+                        catch { }
+                        try {
+                            var adSkipButton = setInterval(() => {
+                                $('.ytp-ad-skip-button').trigger('click');
+                            }, 10000);
+                            setTimeout(() => {
+                                clearInterval(adSkipButton);
+                            }, '120000');
+                        }
+                        catch { }
                     ".Replace("\r\n", " ");
                 execScriptHelper(stringinject);
             }
@@ -722,7 +767,7 @@ namespace Playcipe
                 cutsound = false;
                 VolDown();
                 VolUp();
-                string stringinject = @"
+                stringinject = @"
                         var player = document.getElementById('player');
                         if (player) {
                             player.style.backgroundImage = 'none';
