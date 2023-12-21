@@ -732,6 +732,18 @@ namespace Playcipe
                         }
                         catch { }
                         try {
+                            var button = document.querySelector('.ytp-ad-skip-button-modern');
+                            var video = document.querySelector('#player');
+                            video.after(button);
+                        }
+                        catch { }
+                        try {
+                            var button = document.querySelector('.ytp-ad-skip-button');
+                            var video = document.querySelector('#player');
+                            video.after(button);
+                        }
+                        catch { }
+                        try {
                             var script = document.createElement('script');
                             script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js';
                             script.async = false;
