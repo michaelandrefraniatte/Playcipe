@@ -255,7 +255,7 @@ function cutAdd(link) {
             player.style.backgroundSize = 'cover';
             player.style.backgroundRepeat = 'no-repeat';
             player.style.backgroundPosition = 'center';
-            $('.ytp-mute-button').trigger('click');
+            document.querySelector('.ytp-mute-button').click();
         }
     }
     catch { }
@@ -272,18 +272,10 @@ function cutAdd(link) {
     }
     catch { }
     try {
-        var script = document.createElement('script');
-        script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js';
-        script.async = false;
-        var head = document.getElementsByTagName('head')[0];
-        head.appendChild(script);
-    }
-    catch { }
-    try {
         (function () {
             var adSkipButtonModern = setInterval(() => {
                 try {
-                    $('.ytp-ad-skip-button-modern').trigger('click');
+                    document.querySelector('.ytp-ad-skip-button-modern').click();
                 }
                 catch { }
             }, 10000);
@@ -297,7 +289,7 @@ function cutAdd(link) {
         (function () {
             var adSkipButton = setInterval(() => {
                 try {
-                    $('.ytp-ad-skip-button').trigger('click');
+                    document.querySelector('.ytp-ad-skip-button').click();
                 }
                 catch { }
             }, 10000);
@@ -318,5 +310,5 @@ function restorePlayer() {
     if (video) {
         video.style.display = 'block';
     }
-    $('.ytp-mute-button').trigger('click');
+    document.querySelector('.ytp-mute-button').click();
 }
