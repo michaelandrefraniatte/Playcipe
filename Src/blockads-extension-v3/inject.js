@@ -255,7 +255,10 @@ function cutAdd(link) {
             player.style.backgroundSize = 'cover';
             player.style.backgroundRepeat = 'no-repeat';
             player.style.backgroundPosition = 'center';
-            document.querySelector('.ytp-mute-button').click();
+            var mutebutton = document.querySelector('.ytp-mute-button');
+            if (mutebutton) {
+                mutebutton.click();
+            }
         }
     }
     catch { }
@@ -310,5 +313,8 @@ function restorePlayer() {
     if (video) {
         video.style.display = 'block';
     }
-    document.querySelector('.ytp-mute-button').click();
+    var mutebutton = document.querySelector('.ytp-mute-button');
+    if (mutebutton) {
+        mutebutton.click();
+    }
 }
