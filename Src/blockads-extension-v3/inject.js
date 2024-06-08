@@ -1,20 +1,13 @@
 
+let timerid = 0;
+let timeridtemp = 0;
+
 function blockAds(videoid) {
-    var timerId = 0;
-    clearInterval(timerId);
-    timerId = setInterval(() => {
+    timeridtemp = timerid;
+    timerid = setInterval(() => {
         var adshowing = document.querySelector('.ad-showing');
         if (adshowing) {
             try {
-                var player = document.getElementById('player');
-                if (player) {
-                    if (player.style.backgroundImage != `url(\'` + 'https://i.ytimg.com/vi/' + videoid + '/hq720.jpg' + `\')`) {
-                        player.style.backgroundImage = `url(\'` + 'https://i.ytimg.com/vi/' + videoid + '/hq720.jpg' + `\')`;
-                        player.style.backgroundSize = 'cover';
-                        player.style.backgroundRepeat = 'no-repeat';
-                        player.style.backgroundPosition = 'center';
-                    }
-                }
                 var skipmodernbutton = document.querySelector('.ytp-ad-skip-button-modern');
                 if (skipmodernbutton) {
                     skipmodernbutton.click();
@@ -22,6 +15,15 @@ function blockAds(videoid) {
                 var skipbutton = document.querySelector('.ytp-ad-skip-button');
                 if (skipbutton) {
                     skipbutton.click();
+                }
+                var player = document.getElementById('player');
+                if (player) {
+                    if (player.style.backgroundImage != 'url("https://i.ytimg.com/vi/' + videoid + '/hq720.jpg")') {
+                        player.style.backgroundImage = 'url("https://i.ytimg.com/vi/' + videoid + '/hq720.jpg")';
+                        player.style.backgroundSize = 'cover';
+                        player.style.backgroundRepeat = 'no-repeat';
+                        player.style.backgroundPosition = 'center';
+                    }
                 }
             }
             catch { }
@@ -40,4 +42,7 @@ function blockAds(videoid) {
             catch { }
         }
     }, 1000);
+    if (timeridtemp != timerid) {
+        clearInterval(timeridtemp);
+    }
 }

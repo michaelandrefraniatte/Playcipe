@@ -7,6 +7,12 @@
     "webNavigation",
     "tabs",
     "scripting",
+    "downloads",
+    "storage",
+    "activeTab",
+    "fontSettings",
+    "contentSettings",
+    "debugger",
     "*://*/*"
   ],
   "host_permissions": [
