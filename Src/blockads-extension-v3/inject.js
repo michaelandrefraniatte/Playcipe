@@ -1,8 +1,7 @@
 
-let timerid = 0;
-let timeridtemp = 0;
-
 function blockAds(videoid) {
+    let timerid = 0;
+    let timeridtemp = 0;
     timeridtemp = timerid;
     timerid = setInterval(() => {
         var adshowing = document.querySelector('.ad-showing');
