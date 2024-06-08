@@ -40,8 +40,8 @@ function blockAds(videoid) {
             try {
                 var player = document.getElementById('player');
                 if (player) {
-                    if (player.style.backgroundImage != 'url(https://i.ytimg.com/vi/' + videoid + '/hq720.jpg)') {
-                        player.style.backgroundImage = 'url(https://i.ytimg.com/vi/' + videoid + '/hq720.jpg)';
+                    if (player.style.backgroundImage != `url(\'` + 'https://i.ytimg.com/vi/' + id + '/hq720.jpg' + `\')`) {
+                        player.style.backgroundImage = `url(\'` + 'https://i.ytimg.com/vi/' + id + '/hq720.jpg' + `\')`;
                         player.style.backgroundSize = 'cover';
                         player.style.backgroundRepeat = 'no-repeat';
                         player.style.backgroundPosition = 'center';
