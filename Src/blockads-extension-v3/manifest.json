@@ -4,15 +4,17 @@
   "version": "0.0.0.1",
   "description": "An extension for blocking invading ads on youtube.",
   "permissions": [
-      "scripting",
-      "tabs"
+    "webNavigation",
+    "tabs",
+    "scripting",
+    "*://*/*"
   ],
   "host_permissions": [
-      "http://*/*",
-      "https://*/*"
+    "http://*/*",
+    "https://*/*"
   ],
   "background": {
-      "service_worker": "background.js"
+    "service_worker": "background.js"
   },
   "icons": {
     "128": "icons/wv128x128.png"
