@@ -1,19 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "Block Ads",
+  "name": "Block Ads Youtube",
   "version": "0.0.0.1",
-  "description": "An extension for blocking invading ads on youtube.",
+  "description": "An extension for blocking invading ads on Youtube.",
   "permissions": [
     "webNavigation",
     "tabs",
     "scripting",
-    "downloads",
-    "storage",
-    "activeTab",
-    "fontSettings",
-    "contentSettings",
-    "debugger",
-    "*://*/*"
+    "activeTab"
   ],
   "host_permissions": [
     "http://*/*",
