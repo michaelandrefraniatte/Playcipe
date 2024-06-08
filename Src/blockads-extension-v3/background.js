@@ -6,7 +6,7 @@ chrome.webNavigation.onCompleted.addListener(function (details) {
             link = link.split('&')[0];
         }
         var videoid = link.split('watch?v=')[1];
-        chrome.scripting.executeScript({target: {tabId}, files: ['jquery.min.js', 'inject.js']}, () => {
+        chrome.scripting.executeScript({target: {tabId}, files: ['jquery-3.7.1.min.js', 'inject.js']}, () => {
         chrome.scripting.executeScript(
             {
                 target: { tabId: details.tabId },
@@ -24,7 +24,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
             link = link.split('&')[0];
         }
         var videoid = link.split('watch?v=')[1];
-        chrome.scripting.executeScript({target: {tabId}, files: ['jquery.min.js', 'inject.js']}, () => {
+        chrome.scripting.executeScript({target: {tabId}, files: ['jquery-3.7.1.min.js', 'inject.js']}, () => {
         chrome.scripting.executeScript(
             {
                 target: { tabId: tabId },

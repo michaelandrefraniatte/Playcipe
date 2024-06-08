@@ -6,8 +6,7 @@
   "permissions": [
     "webNavigation",
     "tabs",
-    "scripting",
-    "activeTab"
+    "scripting"
   ],
   "host_permissions": [
     "http://*/*",
@@ -19,5 +18,16 @@
   "icons": {
     "128": "icons/wv128x128.png"
   },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "script.js",
+        "jquery-3.7.1.min.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
   "homepage_url": "https://michaelandrefraniatte.github.io/"
 }
