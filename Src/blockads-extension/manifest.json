@@ -1,0 +1,33 @@
+{
+  "manifest_version": 2,
+  "name": "Block Ads Youtube",
+  "version": "0.0.0.1",
+  "description": "An extension for blocking invading ads on Youtube.",
+  "permissions": [
+    "webNavigation",
+    "tabs",
+    "scripting"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "128": "icons/wv128x128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "script.js",
+        "jquery-3.7.1.min.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "homepage_url": "https://michaelandrefraniatte.github.io/"
+}
